@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberSec | Password Strength Analyzer & Security Suggestion Tool</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Chart.js CDN with Local Resilience -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- Top Navigation & Brand Header -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="shield-badge">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
+          </svg>
+        </div>
+        <div>
+          <div class="brand-title">CYBER<span class="highlight">SEC</span> // PASSHOUND</div>
+          <div class="brand-subtitle">Defensive Password Strength Analyzer & IAM Suggestion Engine</div>
+        </div>
+      </div>
+      <div class="header-status">
+        <span class="status-indicator"></span>
+        <span class="status-label">In-Memory Engine Active</span>
+        <span class="badge privacy-badge">🔒 Zero-Retention Guaranteed</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="nav-tabs-wrapper">
+    <div class="nav-tabs">
+      <button class="nav-tab active" data-tab="analyzer">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Real-Time Analyzer
+      </button>
+      <button class="nav-tab" data-tab="generator">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M8 12h8M12 8v8"/></svg>
+        Secure Generator & Passphrases
+      </button>
+      <button class="nav-tab" data-tab="policy">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/></svg>
+        Policy Checker (NIST SP 800-63B)
+      </button>
+      <button class="nav-tab" data-tab="hashing">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 17 10 11 4 5"/><line x1="12" x2="20" y1="19" y2="19"/></svg>
+        Hashing & Salting Lab
+      </button>
+      <button class="nav-tab" data-tab="dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/><rect width="4" height="7" x="7" y="10" rx="1"/><rect width="4" height="12" x="15" y="5" rx="1"/></svg>
+        Security Analytics Dashboard
+      </button>
+      <button class="nav-tab" data-tab="education">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" x2="12.01" y1="17" y2="17"/></svg>
+        Cybersecurity Rules & FAQ
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="main-container">
+
+    <!-- ============================================== -->
+    <!-- TAB 1: REAL-TIME ANALYZER -->
+    <!-- ============================================== -->
+    <section id="tab-analyzer" class="tab-pane active">
+      <div class="grid-layout">
+        
+        <!-- Input Panel Left -->
+        <div class="card input-card">
+          <div class="card-header">
+            <h2 class="card-title">Password Input & Context</h2>
+            <span class="info-tag">Local Evaluation</span>
+          </div>
+
+          <div class="form-group">
+            <label for="password-input">Candidate Password <span class="required">*</span></label>
+            <div class="password-field-wrapper">
+              <input type="password" id="password-input" class="password-input" placeholder="Type or paste a test password..." autocomplete="off" spellcheck="false">
+              <button type="button" id="toggle-password-btn" class="toggle-password-btn" title="Toggle visibility">
+                <span class="eye-icon">👁️</span>
+              </button>
+            </div>
+            <p class="field-hint">Processed purely in memory. Never saved, logged, or sent to external clouds.</p>
+          </div>
+
+          <!-- Quick Test Presets -->
+          <div class="presets-section">
+            <span class="presets-label">Synthetic Test Presets:</span>
+            <div class="preset-chips">
+              <button class="chip" data-pwd="123456">123456</button>
+              <button class="chip" data-pwd="Password123!">Password123!</button>
+              <button class="chip" data-pwd="aaaaaaaaaaaaaaaa">aaaaaaaaaaaaaaaa</button>
+              <button class="chip" data-pwd="qwerty2026!">qwerty2026!</button>
+              <button class="chip" data-pwd="correct-horse-battery-staple">passphrase-demo</button>
+              <button class="chip" data-pwd="J9#mK$2vL@8zP&4w">high-entropy</button>
+            </div>
+          </div>
+
+          <!-- Optional Personal Context Collapsible -->
+          <details class="context-details">
+            <summary class="context-summary">
+              <span>Optional: Test Personal Context Overlap (OSINT Defense)</span>
+              <span class="arrow">▼</span>
+            </summary>
+            <div class="context-body">
+              <p class="context-info">Attackers use OSINT to test names and birth years. Enter fictional demo context below to check for predictable personal patterns:</p>
+              <div class="context-grid">
+                <div>
+                  <label for="first-name-input">Demo First Name</label>
+                  <input type="text" id="first-name-input" placeholder="e.g. Rahul">
+                </div>
+                <div>
+                  <label for="birth-year-input">Demo Birth Year</label>
+                  <input type="text" id="birth-year-input" placeholder="e.g. 1999" maxlength="4">
+                </div>
+                <div>
+                  <label for="organization-input">Demo Company/College</label>
+                  <input type="text" id="organization-input" placeholder="e.g. IIT">
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- Core Character Variety Checklist -->
+          <div class="character-checklist">
+            <div class="check-item" id="check-length">
+              <span class="check-icon">○</span>
+              <span class="check-text">Length &ge; 12 chars</span>
+            </div>
+            <div class="check-item" id="check-lowercase">
+              <span class="check-icon">○</span>
+              <span class="check-text">Lowercase (a-z)</span>
+            </div>
+            <div class="check-item" id="check-uppercase">
+              <span class="check-icon">○</span>
+              <span class="check-text">Uppercase (A-Z)</span>
+            </div>
+            <div class="check-item" id="check-digits">
+              <span class="check-icon">○</span>
+              <span class="check-text">Numbers (0-9)</span>
+            </div>
+            <div class="check-item" id="check-symbols">
+              <span class="check-icon">○</span>
+              <span class="check-text">Symbols (!@#$)</span>
+            </div>
+            <div class="check-item" id="check-uniqueness">
+              <span class="check-icon">○</span>
+              <span class="check-text">High Uniqueness</span>
+            </div>
+          </div>
+
+          <!-- Defensive Formula Callout -->
+          <div class="formula-banner">
+            <div class="formula-text">
+              <strong>DEFENSIVE PRINCIPLE:</strong><br>
+              Length + Unpredictability + Pattern Resistance + Common Check = Resilient Credential
+            </div>
+          </div>
+        </div>
+
+        <!-- Output Panel Right -->
+        <div class="card output-card">
+          <div class="card-header">
+            <h2 class="card-title">Real-Time Security Evaluation</h2>
+            <div id="classification-badge" class="badge badge-default">AWAITING INPUT</div>
+          </div>
+
+          <!-- Gauge and Score Display -->
+          <div class="meter-wrapper">
+            <div class="meter-top-row">
+              <div class="score-display">
+                <span id="score-number" class="score-number">0</span>
+                <span class="score-max">/100</span>
+              </div>
+              <div class="meter-classification-text">
+                <span class="label">STRENGTH TIER</span>
+                <h3 id="meter-classification-title">VERY WEAK</h3>
+              </div>
+            </div>
+
+            <!-- Dynamic Bar Progress -->
+            <div class="progress-track">
+              <div id="progress-bar" class="progress-fill" style="width: 0%;"></div>
+            </div>
+
+            <p id="score-summary-text" class="score-summary-text">Type a password above to begin defensive multi-vector strength analysis.</p>
+          </div>
+
+          <!-- Metrics Row -->
+          <div class="metrics-grid">
+            <div class="metric-box">
+              <span class="metric-label">Length</span>
+              <span id="metric-length" class="metric-val">0</span>
+              <span id="metric-length-band" class="metric-sub">Empty</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Unique Chars</span>
+              <span id="metric-unique" class="metric-val">0</span>
+              <span id="metric-unique-ratio" class="metric-sub">0%</span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Theoretical Entropy</span>
+              <span id="metric-theor-entropy" class="metric-val">0.0 b</span>
+              <span class="metric-sub">Pool: <span id="metric-pool-size">0</span></span>
+            </div>
+            <div class="metric-box">
+              <span class="metric-label">Effective Entropy</span>
+              <span id="metric-eff-entropy" class="metric-val">0.0 b</span>
+              <span id="metric-entropy-rating" class="metric-sub">Zero</span>
+            </div>
+          </div>
+
+          <!-- Cracking Resistance Estimate Card -->
+          <div class="crack-time-card">
+            <div class="crack-time-header">
+              <span class="crack-title">Educational Guess Resistance:</span>
+              <span class="crack-tag">Hypothetical</span>
+            </div>
+            <div class="crack-time-body">
+              <p><strong>Offline GPU Cluster:</strong> <span id="resistance-offline">Instantaneous</span></p>
+              <p><strong>Online Web Form:</strong> <span id="resistance-online">Instantaneous</span></p>
+              <p class="crack-disclaimer"><small>*Educational estimate only. Real-world resilience depends on hash algorithms (e.g. Argon2id vs MD5), salt, and rate-limiting.</small></p>
+            </div>
+          </div>
+
+          <!-- Findings & Weaknesses List -->
+          <div class="findings-section">
+            <h4 class="section-subtitle">Detected Analytical Findings</h4>
+            <div id="findings-container" class="findings-list">
+              <div class="empty-state">No analysis performed yet.</div>
+            </div>
+          </div>
+
+          <!-- Specific Actionable Recommendations -->
+          <div class="suggestions-section">
+            <h4 class="section-subtitle">Targeted Security Recommendations</h4>
+            <div id="suggestions-container" class="suggestions-list">
+              <div class="empty-state">Recommendations will appear based on detected weaknesses.</div>
+            </div>
+          </div>
+
+          <!-- Score Audit Breakdown Collapsible -->
+          <details class="breakdown-details">
+            <summary class="breakdown-summary">View Transparent Scoring Breakdown (Additions & Penalties)</summary>
+            <div id="scoring-breakdown-container" class="breakdown-body">
+              <!-- Dynamically populated -->
+            </div>
+          </details>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 2: PASSWORD & PASSPHRASE GENERATOR -->
+    <!-- ============================================== -->
+    <section id="tab-generator" class="tab-pane">
+      <div class="grid-layout">
+        
+        <!-- Generator Controls Left -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">CSPRNG Password Generator</h2>
+            <span class="badge badge-success">Python secrets</span>
+          </div>
+
+          <p class="card-desc">
+            Uses cryptographically secure hardware-seeded pseudo-random numbers (CSPRNG via <code>secrets</code>). 
+            Avoids deterministic pseudo-random generators (like standard <code>random</code>) which leak internal state.
+          </p>
+
+          <div class="form-group">
+            <div class="slider-header">
+              <label for="gen-length-slider">Length: <strong id="gen-length-val">18</strong> characters</label>
+            </div>
+            <input type="range" id="gen-length-slider" min="8" max="48" value="18" class="range-slider">
+          </div>
+
+          <div class="checkbox-group">
+            <label><input type="checkbox" id="gen-upper" checked> Uppercase Letters (A-Z)</label>
+            <label><input type="checkbox" id="gen-lower" checked> Lowercase Letters (a-z)</label>
+            <label><input type="checkbox" id="gen-digits" checked> Numeric Digits (0-9)</label>
+            <label><input type="checkbox" id="gen-symbols" checked> Special Symbols (!@#$%^&*)</label>
+          </div>
+
+          <button id="generate-password-btn" class="btn btn-primary">Generate Secure Password</button>
+
+          <div class="generated-output-box">
+            <label>Generated Result:</label>
+            <div class="copy-input-row">
+              <input type="text" id="generated-password-output" readonly placeholder="Click Generate...">
+              <button id="copy-password-btn" class="btn btn-secondary">Copy</button>
+              <button id="test-in-analyzer-btn" class="btn btn-outline" title="Send to Real-Time Analyzer">Test</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Diceware Passphrase Right -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Diceware Multi-Word Passphrase</h2>
+            <span class="badge badge-info">xkcd #936 Standard</span>
+          </div>
+
+          <p class="card-desc">
+            Passphrases chain multiple dictionary words chosen uniformly at random. They maximize length and memory retention while frustrating automated dictionary and brute-force tools.
+          </p>
+
+          <div class="form-group">
+            <div class="slider-header">
+              <label for="passphrase-words-slider">Words: <strong id="passphrase-words-val">4</strong> words</label>
+            </div>
+            <input type="range" id="passphrase-words-slider" min="3" max="6" value="4" class="range-slider">
+          </div>
+
+          <div class="form-group">
+            <label for="passphrase-separator">Word Separator</label>
+            <select id="passphrase-separator" class="select-input">
+              <option value="-">Hyphen (-)</option>
+              <option value=".">Period (.)</option>
+              <option value="_">Underscore (_)</option>
+              <option value=" ">Space (per NIST guidelines)</option>
+            </select>
+          </div>
+
+          <button id="generate-passphrase-btn" class="btn btn-primary">Generate Diceware Passphrase</button>
+
+          <div class="generated-output-box">
+            <label>Generated Passphrase:</label>
+            <div class="copy-input-row">
+              <input type="text" id="generated-passphrase-output" readonly placeholder="Click Generate...">
+              <button id="copy-passphrase-btn" class="btn btn-secondary">Copy</button>
+              <button id="test-passphrase-btn" class="btn btn-outline" title="Send to Real-Time Analyzer">Test</button>
+            </div>
+            <p id="passphrase-entropy-info" class="field-hint"></p>
+          </div>
+
+          <div class="callout callout-info">
+            <strong>Why Passphrases?</strong><br>
+            A 4-word random passphrase like <code>correct-horse-battery-staple</code> provides &approx;50+ bits of entropy with 28 characters of length, which is exponentially harder to crack offline than a 8-character string like <code>P@ssw0rd</code>!
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 3: POLICY CHECKER (NIST SP 800-63B) -->
+    <!-- ============================================== -->
+    <section id="tab-policy" class="tab-pane">
+      <div class="grid-layout">
+        
+        <!-- Policy Configuration Left -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Enterprise Password Policy Evaluator</h2>
+            <span class="badge badge-warning">IAM Compliance</span>
+          </div>
+
+          <p class="card-desc">
+            Evaluates candidate passwords against organizational and compliance baselines. 
+            Separates binary compliance (PASS/FAIL) from mathematical strength.
+          </p>
+
+          <div class="form-group">
+            <label for="policy-test-password">Candidate Password</label>
+            <input type="text" id="policy-test-password" class="text-input" placeholder="Type password to evaluate against policy...">
+          </div>
+
+          <div class="policy-controls-box">
+            <h4 class="controls-subtitle">Configurable Policy Controls:</h4>
+            
+            <div class="control-row">
+              <label for="policy-min-len">Minimum Length (chars)</label>
+              <input type="number" id="policy-min-len" value="12" min="6" max="64" class="number-input">
+            </div>
+
+            <div class="control-row">
+              <label for="policy-max-len">Maximum Supported Length (chars)</label>
+              <input type="number" id="policy-max-len" value="128" min="64" max="256" class="number-input">
+            </div>
+
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="policy-reject-common" checked> Blacklist Known Common Passwords (NIST Mandatory)</label>
+              <label><input type="checkbox" id="policy-allow-spaces" checked> Permit Whitespace / Spaces (NIST Mandatory)</label>
+              <label><input type="checkbox" id="policy-reject-context" checked> Reject Personal Name & Org Overlap</label>
+            </div>
+
+            <h5 class="controls-subtitle-sub">Legacy Composition Rules (NIST Discouraged):</h5>
+            <div class="checkbox-group">
+              <label><input type="checkbox" id="policy-req-lower"> Require Lowercase Character</label>
+              <label><input type="checkbox" id="policy-req-upper"> Require Uppercase Character</label>
+              <label><input type="checkbox" id="policy-req-digits"> Require Numeric Digit</label>
+              <label><input type="checkbox" id="policy-req-symbols"> Require Special Symbol</label>
+            </div>
+          </div>
+
+          <button id="run-policy-check-btn" class="btn btn-primary">Evaluate Policy Compliance</button>
+        </div>
+
+        <!-- Policy Results Right -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">Compliance Evaluation Verdict</h2>
+            <div id="policy-verdict-badge" class="badge badge-default">NOT EVALUATED</div>
+          </div>
+
+          <div id="policy-verdict-banner" class="verdict-banner">
+            <h3>Enter a password and click evaluate</h3>
+            <p>Evaluation will verify both standard corporate baselines and modern NIST digital identity guidelines.</p>
+          </div>
+
+          <h4 class="section-subtitle">Evaluated Rule Breakdown:</h4>
+          <div id="policy-rules-list" class="policy-rules-list">
+            <div class="empty-state">No rules evaluated yet.</div>
+          </div>
+
+          <!-- NIST SP 800-63B Comparison Box -->
+          <div class="callout callout-nist">
+            <h4>NIST SP 800-63B Alignment</h4>
+            <p id="nist-compliance-text">
+              NIST Digital Identity Guidelines explicitly advise against mandatory composition rules (mixing characters) and arbitrary periodic resets (e.g. 90 days), as they induce users into predictable pattern choices. Instead, NIST emphasizes minimum length (&ge;8, recommended 12+), testing against compromised/dictionary lists, and supporting spaces for passphrases.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 4: HASHING & SALTING LAB -->
+    <!-- ============================================== -->
+    <section id="tab-hashing" class="tab-pane">
+      <div class="card full-width">
+        <div class="card-header">
+          <div>
+            <h2 class="card-title">Password Hashing & Key Stretching Laboratory</h2>
+            <p class="card-desc">Understand why production systems NEVER store plaintext passwords or fast hashes (MD5/SHA256).</p>
+          </div>
+          <span class="badge badge-info">Educational Sandbox</span>
+        </div>
+
+        <div class="grid-layout-2col">
+          <!-- Input & Action -->
+          <div>
+            <div class="form-group">
+              <label for="hash-demo-input">Synthetic Password Input</label>
+              <input type="text" id="hash-demo-input" class="text-input" value="SyntheticDemoPassword42!">
+              <small class="field-hint">Never enter real live account credentials.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="hash-iterations">PBKDF2 Work Factor (Iterations)</label>
+              <select id="hash-iterations" class="select-input">
+                <option value="10000">10,000 (Legacy testing)</option>
+                <option value="100000" selected>100,000 (Standard demo)</option>
+                <option value="300000">300,000 (High security)</option>
+                <option value="600000">600,000 (OWASP Recommended)</option>
+              </select>
+            </div>
+
+            <button id="run-hash-demo-btn" class="btn btn-primary">Execute Cryptographic Pipeline</button>
+          </div>
+
+          <!-- Educational Concepts -->
+          <div class="hash-concept-box">
+            <h4>The Storage Pipeline:</h4>
+            <div class="pipeline-diagram">
+              <span class="pipe-node">Plaintext Password</span> &rarr;
+              <span class="pipe-node">Random Salt (16B)</span> &rarr;
+              <span class="pipe-node">Slow Key Stretching</span> &rarr;
+              <span class="pipe-node highlight">Stored Hash String</span>
+            </div>
+            <p><strong>Salt:</strong> Mitigates Rainbow Tables so identical passwords hash uniquely.</p>
+            <p><strong>Key Stretching:</strong> Deliberately consumes CPU/memory cycles to bottle-neck GPU cracking rigs.</p>
+          </div>
+        </div>
+
+        <!-- Hash Results Display -->
+        <div id="hash-results-area" class="hash-results-area" style="display: none;">
+          <h3 class="section-title">Cryptographic Outputs Comparison</h3>
+          
+          <div class="hash-compare-grid">
+            <!-- Unsafe Fast Hash -->
+            <div class="hash-box unsafe">
+              <div class="hash-box-header">
+                <span class="hash-box-title">❌ Fast Unsalted Hash (SHA-256)</span>
+                <span id="fast-hash-time" class="time-badge">0.00 ms</span>
+              </div>
+              <p class="hash-string-display" id="fast-hash-val">---</p>
+              <p class="hash-critique"><strong>Critical Flaw:</strong> Designed for high throughput (billions of hashes/sec per GPU). Vulnerable to rainbow tables and instantaneous brute-forcing.</p>
+            </div>
+
+            <!-- Safe Slow Hash -->
+            <div class="hash-box safe">
+              <div class="hash-box-header">
+                <span class="hash-box-title">✅ Salted Key-Stretched Hash (PBKDF2-HMAC-SHA256)</span>
+                <span id="slow-hash-time" class="time-badge">0.00 ms</span>
+              </div>
+              <p class="hash-string-display" id="slow-hash-val">---</p>
+              <p class="hash-critique"><strong>Defense:</strong> Incorporates a 16-byte cryptographically random salt and forces thousands of iterations per candidate guess, crippling offline dictionary performance.</p>
+            </div>
+          </div>
+
+          <!-- Salt and Details -->
+          <div class="salt-detail-box">
+            <p><strong>Generated 16-Byte Cryptographic Salt:</strong> <code id="demo-salt-hex">---</code></p>
+            <p><strong>Storage Representation:</strong> <code>algorithm$iterations$salt$hash</code></p>
+            <p><strong>Modern Gold Standard:</strong> <strong>Argon2id</strong> (Winner of Password Hashing Competition, memory-hard against GPU/ASIC).</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 5: SECURITY ANALYTICS DASHBOARD -->
+    <!-- ============================================== -->
+    <section id="tab-dashboard" class="tab-pane">
+      <div class="dashboard-header-row">
+        <div>
+          <h2 class="dashboard-main-title">Defensive Telemetry & IAM Analytics</h2>
+          <p class="dashboard-sub">Aggregated telemetry collected strictly from anonymous metadata (Zero Credential Retention).</p>
+        </div>
+        <div class="dashboard-actions">
+          <button id="refresh-dashboard-btn" class="btn btn-secondary">Refresh Telemetry</button>
+          <button id="seed-demo-btn" class="btn btn-outline">Seed Sample Data</button>
+          <button id="reset-analytics-btn" class="btn btn-danger-outline">Reset Telemetry</button>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <span class="kpi-label">Total Analyses</span>
+          <h3 id="kpi-total-analyses" class="kpi-value">0</h3>
+          <span class="kpi-sub">Anonymous Sessions</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Average Score</span>
+          <h3 id="kpi-average-score" class="kpi-value">0</h3>
+          <span class="kpi-sub">Out of 100</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">Average Length</span>
+          <h3 id="kpi-average-length" class="kpi-value">0</h3>
+          <span class="kpi-sub">Characters</span>
+        </div>
+        <div class="kpi-card">
+          <span class="kpi-label">High-Risk Rate</span>
+          <h3 id="kpi-high-risk-rate" class="kpi-value">0%</h3>
+          <span class="kpi-sub">Weak / Very Weak</span>
+        </div>
+      </div>
+
+      <!-- Charts Grid -->
+      <div class="charts-grid">
+        <!-- Chart 1: Strength Distribution -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h4>Strength Classification Distribution</h4>
+            <small>5-Tier Breakdown</small>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-strength-distribution"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 2: Common Weaknesses -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h4>Most Prevalent Vulnerabilities</h4>
+            <small>Detected Pattern Frequencies</small>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-weaknesses"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 3: Score Distribution Histogram -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h4>Score Distribution Histogram</h4>
+            <small>Bucketed 0-100 Ranges</small>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-score-hist"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart 4: Length Distribution -->
+        <div class="chart-card">
+          <div class="chart-card-header">
+            <h4>Password Length Distribution</h4>
+            <small>Educational Bands</small>
+          </div>
+          <div class="chart-canvas-wrapper">
+            <canvas id="chart-length-dist"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Anonymous Telemetry Table -->
+      <div class="card full-width" style="margin-top: 1.5rem;">
+        <div class="card-header">
+          <h3 class="card-title">Recent Anonymous Telemetry Entries</h3>
+          <span class="badge privacy-badge">No Passwords Saved</span>
+        </div>
+        <div class="table-responsive">
+          <table class="telemetry-table">
+            <thead>
+              <tr>
+                <th>Analysis ID</th>
+                <th>Score</th>
+                <th>Classification</th>
+                <th>Length</th>
+                <th>Weakness Count</th>
+                <th>Analyzed At (UTC)</th>
+              </tr>
+            </thead>
+            <tbody id="telemetry-table-body">
+              <tr><td colspan="6" class="text-center">Loading telemetry...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================== -->
+    <!-- TAB 6: CYBERSECURITY RULES & EDUCATION -->
+    <!-- ============================================== -->
+    <section id="tab-education" class="tab-pane">
+      <div class="card full-width">
+        <div class="card-header">
+          <h2 class="card-title">The 10 Golden Rules of Modern Password Security</h2>
+          <span class="badge badge-primary">IAM & Cyber Awareness</span>
+        </div>
+
+        <div class="rules-grid">
+          <div class="rule-box">
+            <span class="rule-num">01</span>
+            <h4>Unique Credentials Everywhere</h4>
+            <p>Never reuse passwords. If one vendor suffers a breach, automated bots immediately test your email and password across hundreds of high-value services (Credential Stuffing).</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">02</span>
+            <h4>Prioritize Length Over Composition</h4>
+            <p>Length is the single most mathematically potent barrier to exhaustive search. Aim for 14-16+ characters or multi-word passphrases.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">03</span>
+            <h4>Eliminate Personal Identifiers</h4>
+            <p>Do not include your name, birth year, pet's name, or employer. Attackers scrape public social media profiles (OSINT) to generate custom attack dictionaries.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">04</span>
+            <h4>Ban Common Keyboard Walks</h4>
+            <p>Sequences like <code>qwerty</code>, <code>asdf</code>, and <code>1qaz</code> are hard-coded into every password cracking mutation engine.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">05</span>
+            <h4>Avoid Formulaic Substitutions</h4>
+            <p>Changing <code>password</code> to <code>P@ssw0rd123!</code> provides false security. Attackers use rule engines that exhaustively test leetspeak and year suffixes in milliseconds.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">06</span>
+            <h4>Use an Audited Password Manager</h4>
+            <p>Tools like Bitwarden or 1Password generate, store, and auto-fill 20+ character random secrets, completely removing the burden of human memorization.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">07</span>
+            <h4>Enforce Multi-Factor Authentication (MFA)</h4>
+            <p>Even an astronomically strong password cannot defend against phishing or session hijacking. App-based MFA (TOTP) or FIDO2 hardware keys are essential.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">08</span>
+            <h4>Never Transmit Over Insecure Channels</h4>
+            <p>Never share passwords in plaintext via email, SMS, or chat platforms. Store credentials only in encrypted vaults.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">09</span>
+            <h4>Stay Alert to Phishing & Deception</h4>
+            <p>Verify URLs and SSL certificates before entering secrets. Attackers routinely craft convincing cloned login portals.</p>
+          </div>
+          <div class="rule-box">
+            <span class="rule-num">10</span>
+            <h4>Rotate Upon Suspected Compromise</h4>
+            <p>Modern standards (NIST) advise against arbitrary 90-day rotations, but immediate rotation is mandatory whenever a breach, malware infection, or unexpected notification occurs.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Notification Toast -->
+  <div id="toast" class="toast">Copied to clipboard!</div>
+
+  <!-- JavaScript Modules -->
+  <script src="/js/meter.js"></script>
+  <script src="/js/generator.js"></script>
+  <script src="/js/policy.js"></script>
+  <script src="/js/hashing_demo.js"></script>
+  <script src="/js/dashboard.js"></script>
+  <script src="/js/app.js"></script>
+</body>
+</html>
