@@ -1,0 +1,47 @@
+{
+  "qwerty_rows": [
+    "`1234567890-=",
+    "~!@#$%^&*()_+",
+    "qwertyuiop[]\\",
+    "asdfghjkl;'",
+    "zxcvbnm,./"
+  ],
+  "numpad_rows": [
+    "789",
+    "456",
+    "123",
+    "0."
+  ],
+  "numpad_cols": [
+    "7410",
+    "852.",
+    "963"
+  ],
+  "common_walks": [
+    "qwerty",
+    "qwert",
+    "werty",
+    "asdfg",
+    "asdf",
+    "sdfg",
+    "dfgh",
+    "fghj",
+    "ghjk",
+    "hjkl",
+    "zxcv",
+    "zxcvb",
+    "xcvb",
+    "cvbn",
+    "vbnm",
+    "1qaz",
+    "2wsx",
+    "3edc",
+    "4rfv",
+    "5tgb",
+    "6yhn",
+    "7ujm",
+    "8ik,",
+    "9ol.",
+    "0p;/"
+  ]
+}
