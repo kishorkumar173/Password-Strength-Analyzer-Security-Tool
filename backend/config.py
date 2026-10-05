@@ -16,9 +16,9 @@ COMMON_PASSWORDS_FILE = DATA_DIR / "common_passwords.txt"
 KEYBOARD_LAYOUTS_FILE = DATA_DIR / "keyboard_layouts.json"
 
 # Server Settings
-HOST = os.environ.get("HOST", "127.0.0.1")
+HOST = os.environ.get("HOST", "0.0.0.0")
 PORT = int(os.environ.get("PORT", 5000))
-DEBUG = os.environ.get("DEBUG", "True").lower() == "true"
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
 # Security & Constraints
 MAX_PASSWORD_LENGTH = 256
