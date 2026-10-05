@@ -91,11 +91,13 @@ def create_app() -> Flask:
 
 if __name__ == "__main__":
     application = create_app()
+    port = int(os.environ.get("PORT", 5000))
+    host = "0.0.0.0"
     print(f"\n==================================================================")
     print(f"🔒 PASSWORD STRENGTH ANALYZER & SECURITY SUGGESTION TOOL")
     print(f"==================================================================")
     print(f"🛡️  Mode: Defensive In-Memory Password Analysis")
     print(f"🛡️  Privacy: ZERO password storage or external transmission")
-    print(f"🌐 Server Running At: http://{HOST}:{PORT}")
+    print(f"🌐 Server Running At: http://{host}:{port}")
     print(f"==================================================================\n")
-    application.run(host=HOST, port=PORT, debug=DEBUG)
+    application.run(host=host, port=port, debug=False, use_reloader=False)
